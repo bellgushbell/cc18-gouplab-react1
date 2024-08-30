@@ -3,17 +3,27 @@ import { useState } from "react"
 export default function SelectToppings() {
 
     const [input, setInput] = useState(0)
-    const [showData, setShowdata] = useState("")
+    const [showData, setShowdata] = useState([])
+    const [showDisplay, setShowDisplay] = useState(false)
 
-
+    console.log(showData)
 
     const hdlChange = (e) => {
         if (e.target.checked === true) {
             setInput((input + +e.target.value))
+            const newShowData = [...showData]
+            newShowData.push({
+                name: e.target.name,
+                price: +e.target.value
+            })
+
+            setShowdata(newShowData)
 
         } else {
 
             setInput((input - +e.target.value))
+
+            setShowdata(showData.filter((el) => el.name !== e.target.name))
 
         }
 
@@ -27,10 +37,17 @@ export default function SelectToppings() {
     // console.log(input)
 
     const hdlClick = (e) => {
-        // console.log(e)
 
-        const ShowAllData = setShowdata(toppings.filter((e) => e.target.checked === true))
-        console.log(ShowAllData)
+        e.preventDefault()
+        setShowDisplay(!showDisplay)
+
+        // if (showDisplay == false) {
+        //     setShowDisplay(true)
+
+        // } else {
+        //     setShowDisplay(false)
+        // }
+
 
     }
 
@@ -40,7 +57,7 @@ export default function SelectToppings() {
 
                 {toppings.map((el, index) => (
                     <div className="border-2 flex flex-grow">
-                        <input key={index} onChange={hdlChange} type="checkbox" name="price" value={el.price} />
+                        <input key={index} onChange={hdlChange} type="checkbox" name={el.name} value={el.price} />
                         <div className="flex gap-10">
 
                             <label > {el.name}</label>
@@ -55,10 +72,15 @@ export default function SelectToppings() {
             </form>
 
 
-            {/* <button onClick={hdlClick}>CheckOut</button> */}
+            <button onClick={hdlClick}>CheckOut</button>
 
-            {/* 
-            <h1>{showData}</h1> */}
+            {showDisplay && showData.map(el => (
+                <div className="flex justify-between">
+                    <p>{el.name}</p>
+                    <p>{el.price}</p>
+                </div>
+
+            ))}
 
 
         </div >
